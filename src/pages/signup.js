@@ -1,6 +1,32 @@
-import React from "react";
+import React,{useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 export default () => {
+
+  
+  const [form, setValues] = useState({
+    name: '',
+    email: '',
+    passwordOne: '',
+    passwordTwo: ''
+  });
+  const printValues = e => {
+    e.preventDefault();
+    console.log(form.name, form.email, form.passwordOne, form.passwordTwo)
+  };
+  const handleFieldChange = e => {
+    setValues({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  };
+  //input validation
+  const isInvalid =
+    form.passwordOne !== form.passwordTwo ||
+    form.passwordOne === '' ||
+    form.email === '' ||
+    form.name === '';
+
+
   const test = "";
   return (
     <div
@@ -25,14 +51,15 @@ export default () => {
               <h5>Sign-Up</h5>
             </div>
             <div className="card-body">
-              <form onSubmit={test}>
+              <form onSubmit={printValues}>
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Name..."
-                    value={test}
-                    onChange={test}
+                    value={form.name}
+                    name='name'
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="form-group">
@@ -40,8 +67,9 @@ export default () => {
                     type="email"
                     className="form-control"
                     placeholder="Email..."
-                    value={test}
-                    onChange={test}
+                    value={form.email}
+                    name='email'
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="form-group">
@@ -49,8 +77,9 @@ export default () => {
                     type="password"
                     className="form-control"
                     placeholder="Password..."
-                    value={test}
-                    onChange={test}
+                    value={form.passwordOne}
+                    name='passwordOne'
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="form-group">
@@ -58,12 +87,13 @@ export default () => {
                     type="password"
                     className="form-control"
                     placeholder="Confirm Password..."
-                    value={test}
-                    onChange={test}
+                    value={form.passwordTwo}
+                    name='passwordTwo'
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="error">{test}</div>
-                <button type="submit" className="btn btn-success">
+                <button disabled={isInvalid} type="submit" className="btn btn-success">
                   Login
                 </button>
               </form>
