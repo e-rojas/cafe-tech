@@ -1,31 +1,66 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from 'axios'
 export default () => {
 
-  
   const [form, setValues] = useState({
-    name: '',
-    email: '',
-    passwordOne: '',
-    passwordTwo: ''
+    name: "",
+    email: "",
+    passwordOne: "",
+    passwordTwo: ""
   });
+  const resetForm = () => {
+    setValues({
+      name: "",
+      email: "",
+      passwordOne: "",
+      passwordTwo: ""
+    })
+  }
+ 
+ 
+
+  /* //printformValues
   const printValues = e => {
     e.preventDefault();
-    console.log(form.name, form.email, form.passwordOne, form.passwordTwo)
-  };
+    console.log(form.name, form.email, form.passwordOne, form.passwordTwo);
+  }; */
+  //handleFieldChange method
   const handleFieldChange = e => {
     setValues({
       ...form,
       [e.target.name]: e.target.value
-    })
+    });
   };
+  //handleSignUp method
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    var postData =  {name: form.name, email: form.email, password:form.passwordOne}
+    
+    let axiosConfig = {
+      headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+      }
+    };
+    
+    axios.post('http://localhost:8000/users', postData, axiosConfig)
+      .then((res) => {
+       resetForm()
+      console.log("RESPONSE RECEIVED: ", res);
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+    })
+    
+  }
   //input validation
   const isInvalid =
     form.passwordOne !== form.passwordTwo ||
-    form.passwordOne === '' ||
-    form.email === '' ||
-    form.name === '';
-
+    form.passwordOne === "" ||
+    form.email === "" ||
+    form.name === "" ||
+    form.passwordOne.length < 8;
 
   const test = "";
   return (
@@ -48,17 +83,17 @@ export default () => {
         <div className="col-12">
           <div className="card ">
             <div className="col p-4">
-              <h5>Sign-Up</h5>
+              <h5>Sign-Up | Cafe Tech </h5>
             </div>
             <div className="card-body">
-              <form onSubmit={printValues}>
+              <form onSubmit={handleSignUp}>
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Name..."
                     value={form.name}
-                    name='name'
+                    name="name"
                     onChange={handleFieldChange}
                   />
                 </div>
@@ -68,7 +103,7 @@ export default () => {
                     className="form-control"
                     placeholder="Email..."
                     value={form.email}
-                    name='email'
+                    name="email"
                     onChange={handleFieldChange}
                   />
                 </div>
@@ -76,10 +111,11 @@ export default () => {
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Password..."
+                    placeholder="Password min length 8 chars"
                     value={form.passwordOne}
-                    name='passwordOne'
+                    name="passwordOne"
                     onChange={handleFieldChange}
+                    minLength="8" required
                   />
                 </div>
                 <div className="form-group">
@@ -88,14 +124,18 @@ export default () => {
                     className="form-control"
                     placeholder="Confirm Password..."
                     value={form.passwordTwo}
-                    name='passwordTwo'
+                    name="passwordTwo"
                     onChange={handleFieldChange}
                   />
                 </div>
-                <div className="error">{test}</div>
-                <button disabled={isInvalid} type="submit" className="btn btn-success">
-                  Login
+                <button
+                  disabled={isInvalid}
+                  type="submit"
+                  className="btn btn-success"
+                >
+                  Sign-Up
                 </button>
+                {test && <p>{test}</p>}
               </form>
             </div>
           </div>
