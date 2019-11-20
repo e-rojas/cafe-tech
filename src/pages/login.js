@@ -44,7 +44,7 @@ export default () => {
       }
     };
     axios
-      .post("http://localhost:3002/users/login", postData, axiosConfig)
+      .post("https://node-server-test-er.herokuapp.com/users/login", postData, axiosConfig)
       .then(res => {
         setMsg(res.data.message);
         localStorage.setItem("token", res.data.token);
@@ -52,7 +52,7 @@ export default () => {
         // console.log("response from server>>>", res.data);
       })
       .catch(err => {
-        setMsg(err);
+       // setMsg(err);
         console.log("AXIOS ERROR:", err);
       });
   };
