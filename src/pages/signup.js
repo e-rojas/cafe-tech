@@ -1,30 +1,29 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from 'axios'
+import axios from "axios";
 export default () => {
-
   const [form, setValues] = useState({
     name: "",
     email: "",
     passwordOne: "",
     passwordTwo: ""
   });
+  const [msg, setMsg] = useState("");
   const resetForm = () => {
     setValues({
       name: "",
       email: "",
       passwordOne: "",
       passwordTwo: ""
-    })
-  }
- 
- 
+    });
+  };
 
   /* //printformValues
   const printValues = e => {
     e.preventDefault();
     console.log(form.name, form.email, form.passwordOne, form.passwordTwo);
   }; */
+  
   //handleFieldChange method
   const handleFieldChange = e => {
     setValues({
@@ -33,27 +32,34 @@ export default () => {
     });
   };
   //handleSignUp method
-  const handleSignUp = (e) => {
+  const handleSignUp = e => {
     e.preventDefault();
-    var postData =  {name: form.name, email: form.email, password:form.passwordOne}
-    
+    var postData = {
+      name: form.name,
+      email: form.email,
+      password: form.passwordOne
+    };
+
     let axiosConfig = {
       headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*"
       }
     };
-    
-    axios.post('http://localhost:8000/users', postData, axiosConfig)
-      .then((res) => {
-       resetForm()
-      console.log("RESPONSE RECEIVED: ", res);
-    })
-    .catch((err) => {
-      console.log("AXIOS ERROR: ", err);
-    })
-    
-  }
+
+    axios
+      .post(`https://node-server-test-er.herokuapp.com/users`, postData, axiosConfig)
+      .then(res => {
+        // console.log(postData)
+        resetForm();
+        setMsg(res.data);
+        console.log('response form server=>>>>',res.data)
+      })
+      .catch(err => {
+        setMsg(err);
+        console.log("AXIOS ERROR: ", err);
+      });
+  };
   //input validation
   const isInvalid =
     form.passwordOne !== form.passwordTwo ||
@@ -62,7 +68,6 @@ export default () => {
     form.name === "" ||
     form.passwordOne.length < 8;
 
-  const test = "";
   return (
     <div
       style={{
@@ -115,7 +120,8 @@ export default () => {
                     value={form.passwordOne}
                     name="passwordOne"
                     onChange={handleFieldChange}
-                    minLength="8" required
+                    minLength="8"
+                    required
                   />
                 </div>
                 <div className="form-group">
@@ -135,7 +141,7 @@ export default () => {
                 >
                   Sign-Up
                 </button>
-                {test && <p>{test}</p>}
+                {msg && <p>{msg}</p>}
               </form>
             </div>
           </div>
